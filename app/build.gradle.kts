@@ -1,7 +1,17 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
 	java
+	application
+	checkstyle
 	id("org.springframework.boot") version "3.4.1"
 	id("io.spring.dependency-management") version "1.1.7"
+	jacoco
+}
+
+application {
+	mainClass.set("hexlet.code.AppApplication")
 }
 
 group = "hexlet.code"
@@ -31,8 +41,25 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 }
 
-tasks.withType<Test> {
+//tasks.withType<Test> {
+//	useJUnitPlatform()
+//}
+tasks.jacocoTestReport {
+	reports {
+		xml.required = true
+	}
+}
+
+tasks.test {
 	useJUnitPlatform()
+	testLogging {
+		exceptionFormat = TestExceptionFormat.FULL
+		events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+		// showStackTraces = true
+		// showCauses = true
+		showStandardStreams = true
+	}
 }
