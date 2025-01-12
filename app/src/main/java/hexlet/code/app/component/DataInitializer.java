@@ -2,6 +2,8 @@ package hexlet.code.app.component;
 
 //import java.util.stream.IntStream;
 
+import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,33 +22,64 @@ import lombok.AllArgsConstructor;
 public class DataInitializer implements ApplicationRunner {
 
 //    @Autowired
-//    private final PostRepository postRepository;
+//    private final UserRepository userRepository;
 
     @Autowired
-    private final UserRepository userRepository;
+    private final TaskStatusRepository taskStatusRepository;
 
     @Autowired
     private final CustomUserDetailsService userService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        addUsers();
+
+        addStatuses();
+    }
+
+    private void addUsers() {
         var email = "hexlet@example.com";
         var userData = new User();
         userData.setEmail(email);
+        userData.setFirstName(email);
         userData.setPasswordDigest("qwerty");
         userService.createUser(userData);
+    }
 
-//        var user = userRepository.findByEmail(email).get();
-//
-//        var faker = new Faker();
-//        IntStream.range(1, 10).forEach(i -> {
-//            var post = new Post();
-//            post.setName(faker.book().title());
-//            var paragraphs = faker.lorem().paragraphs(5);
-//            post.setBody(String.join("\n", paragraphs));
-//            post.setSlug(faker.internet().slug());
-//            post.setAuthor(user);
-//            postRepository.save(post);
-//        });
+    private void addStatuses() {
+        var nameStatus = "Draft";
+        var nameSlug = "draft";
+        var taskStatus = new TaskStatus();
+        taskStatus.setName(nameStatus);
+        taskStatus.setSlug(nameSlug);
+        taskStatusRepository.save(taskStatus);
+
+        nameStatus = "ToReview";
+        nameSlug = "to_review";
+        taskStatus = new TaskStatus();
+        taskStatus.setName(nameStatus);
+        taskStatus.setSlug(nameSlug);
+        taskStatusRepository.save(taskStatus);
+
+        nameStatus = "ToBeFixed";
+        nameSlug = "to_be_fixed";
+        taskStatus = new TaskStatus();
+        taskStatus.setName(nameStatus);
+        taskStatus.setSlug(nameSlug);
+        taskStatusRepository.save(taskStatus);
+
+        nameStatus = "ToPublish";
+        nameSlug = "to_publish";
+        taskStatus = new TaskStatus();
+        taskStatus.setName(nameStatus);
+        taskStatus.setSlug(nameSlug);
+        taskStatusRepository.save(taskStatus);
+
+        nameStatus = "Published";
+        nameSlug = "published";
+        taskStatus = new TaskStatus();
+        taskStatus.setName(nameStatus);
+        taskStatus.setSlug(nameSlug);
+        taskStatusRepository.save(taskStatus);
     }
 }
