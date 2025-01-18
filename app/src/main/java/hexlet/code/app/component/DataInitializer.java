@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 //import hexlet.code.app.model.Post;
 import hexlet.code.app.model.User;
 //import hexlet.code.app.repository.PostRepository;
-import hexlet.code.app.repository.UserRepository;
+//import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
 //import net.datafaker.Faker;

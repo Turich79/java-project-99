@@ -5,8 +5,12 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 //import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,9 +44,9 @@ public class User implements UserDetails, BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-//    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Task> tasks = new ArrayList<>();
 
     // EMAIL
     @Column(unique = true)

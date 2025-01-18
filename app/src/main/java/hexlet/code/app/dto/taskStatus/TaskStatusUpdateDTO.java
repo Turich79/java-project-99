@@ -11,5 +11,10 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public class TaskStatusUpdateDTO {
     @NotBlank
     @Size(min = 1)
-    private JsonNullable<String>  name;
+    private JsonNullable<String> name;
+
+    //по теории это запрещено, но на всякий сделаю
+    @NotBlank
+    @Size(min = 1)
+    private JsonNullable<String> slug;
 }
