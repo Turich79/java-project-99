@@ -4,7 +4,7 @@ package hexlet.code.app.component;
 
 import hexlet.code.app.dto.label.LabelCreateDTO;
 import hexlet.code.app.dto.taskStatus.TaskStatusCreateDTO;
-import hexlet.code.app.model.TaskStatus;
+//import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.service.LabelService;
