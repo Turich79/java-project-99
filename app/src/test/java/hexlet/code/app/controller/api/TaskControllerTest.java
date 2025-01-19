@@ -107,9 +107,9 @@ public class TaskControllerTest {
         String body = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
         System.out.println(body);
         assertThatJson(body).and(
-            a -> a.node("name").isEqualTo(testTask.getName()),
+            a -> a.node("title").isEqualTo(testTask.getName()),
             a -> a.node("index").isEqualTo(testTask.getIndex()),
-            a -> a.node("description").isEqualTo(testTask.getDescription())
+            a -> a.node("content").isEqualTo(testTask.getDescription())
         );
 
         mockMvc.perform(delete("/api/tasks/" + testTask.getId()).with(token));
@@ -139,7 +139,7 @@ public class TaskControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Map<String, String> data = new HashMap<>(Map.of("name", "newTitle"));
+        Map<String, String> data = new HashMap<>(Map.of("title", "newTitle"));
 
         MockHttpServletRequestBuilder request = put("/api/tasks/" + testTask.getId()).with(token)
             .contentType(MediaType.APPLICATION_JSON)
