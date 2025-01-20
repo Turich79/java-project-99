@@ -2,6 +2,7 @@ package hexlet.code.app.controller.api;
 
 import hexlet.code.app.dto.task.TaskCreateDTO;
 import hexlet.code.app.dto.task.TaskDTO;
+import hexlet.code.app.dto.task.TaskParamsDTO;
 import hexlet.code.app.dto.task.TaskUpdateDTO;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.repository.TaskRepository;
@@ -10,7 +11,7 @@ import hexlet.code.app.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,18 +37,11 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("")
-//    public ResponseEntity<List<TaskDTO>> index(TaskParamsDTO params) {
-    public List<TaskDTO> index() {
-        var tasks = taskRepository.findAll();
-        var result = tasks.stream()
-            .map(taskMapper::map)
-            .toList();
-
-        return result;
-//        var taskDTOList = taskService.getAll(params);
-//        return ResponseEntity.ok()
-//            .header("X-Total-Count", String.valueOf(taskDTOList.size()))
-//            .body(taskDTOList);
+    public ResponseEntity<List<TaskDTO>> index(TaskParamsDTO params) {
+        var taskDTOList = taskService.getAll(params);
+        return ResponseEntity.ok()
+            .header("X-Total-Count", String.valueOf(taskDTOList.size()))
+            .body(taskDTOList);
     }
 
     @GetMapping("/{id}")

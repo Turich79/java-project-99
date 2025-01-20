@@ -1,10 +1,11 @@
 package hexlet.code.app.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import hexlet.code.app.mapper.TaskMapper;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -24,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-//import java.util.HashSet;
-//import java.util.List;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -54,8 +55,8 @@ public class TaskControllerTest {
     @Autowired
     private TaskStatusRepository statusRepository;
 
-//    @Autowired
-//    private LabelRepository labelRepository;
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Autowired
     private ObjectMapper om;
@@ -69,7 +70,7 @@ public class TaskControllerTest {
 
     private User testUser;
 
-//    private Label testLabel;
+    private Label testLabel;
 
     private SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor token;
 
@@ -86,13 +87,13 @@ public class TaskControllerTest {
             .create();
         statusRepository.save(testStatus);
 
-//        testLabel = Instancio.of(modelGenerator.getLabelModel())
-//            .create();
-//        labelRepository.save(testLabel);
+        testLabel = Instancio.of(modelGenerator.getLabelModel())
+            .create();
+        labelRepository.save(testLabel);
 
         testTask.setTaskStatus(testStatus);
         testTask.setAssignee(testUser);
-//        testTask.setLabels(new HashSet<>(List.of(testLabel)));
+        testTask.setLabels(new HashSet<>(List.of(testLabel)));
         taskRepository.save(testTask);
 
         token = jwt().jwt(builder -> builder.subject("hexlet@example.com"));
@@ -109,7 +110,10 @@ public class TaskControllerTest {
         assertThatJson(body).and(
             a -> a.node("title").isEqualTo(testTask.getName()),
             a -> a.node("index").isEqualTo(testTask.getIndex()),
-            a -> a.node("content").isEqualTo(testTask.getDescription())
+            a -> a.node("content").isEqualTo(testTask.getDescription()),
+            a -> a.node("status").isEqualTo(testTask.getTaskStatus().getSlug()),
+            a -> a.node("assigneeId").isEqualTo(testTask.getAssignee().getId()),
+            a -> a.node("taskLabelIds").isArray()
         );
 
         mockMvc.perform(delete("/api/tasks/" + testTask.getId()).with(token));
@@ -135,6 +139,7 @@ public class TaskControllerTest {
         assertThat(addedTask.getDescription()).isEqualTo(data.get("content"));
         assertThat(addedTask.getTaskStatus()).isEqualTo(testStatus);
         assertThat(addedTask.getAssignee()).isNull();
+        assertThat(addedTask.getLabels()).isEmpty();
     }
 
     @Test
