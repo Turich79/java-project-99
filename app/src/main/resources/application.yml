@@ -19,8 +19,8 @@ spring:
   output:
     ansi:
       enabled: always
-  #profiles:
-  #  default: development
+  profiles:
+    default: development
 
 sentry:
   dsn: https://examplePublicKey@o0.ingest.sentry.io/0

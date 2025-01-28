@@ -8,6 +8,7 @@ plugins {
     id("io.freefair.lombok") version "8.6"
     id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
+    id("io.sentry.jvm.gradle") version "4.3.1"
     jacoco
 }
 
@@ -62,6 +63,8 @@ dependencies {
     implementation("net.datafaker:datafaker:2.0.2")
 
     runtimeOnly("com.h2database:h2:2.2.224")
+    runtimeOnly("org.postgresql:postgresql:42.6.0")
+
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -83,4 +86,16 @@ tasks.test {
         // showCauses = true
         showStandardStreams = true
     }
+}
+
+sentry {
+    includeSourceContext = true
+
+    org = "obyrif"
+    projectName = "java-spring"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+tasks.sentryBundleSourcesJava {
+    enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
