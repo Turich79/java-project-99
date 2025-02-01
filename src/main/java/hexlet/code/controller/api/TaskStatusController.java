@@ -38,7 +38,6 @@ public class TaskStatusController {
     @ResponseStatus(HttpStatus.OK)
     public List<TaskStatusDTO> index() {
         var taskStatuses = taskStatusRepository.findAll();
-        //taskStatusService.getAll();
         var result = taskStatuses.stream()
             .map(taskStatusMapper::map)
             .toList();

@@ -1,4 +1,4 @@
-package hexlet.code.api.util;
+package hexlet.code.util;
 
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;

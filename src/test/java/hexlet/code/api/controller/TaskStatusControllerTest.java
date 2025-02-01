@@ -8,7 +8,7 @@ import hexlet.code.model.User;
 //import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 //import hexlet.code.app.repository.UserRepository;
-import hexlet.code.api.util.ModelGenerator;
+import hexlet.code.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,16 +39,7 @@ public class TaskStatusControllerTest {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-////    @Autowired
-////    private TaskRepository taskRepository;
-////
-////    @Autowired
-////    private LabelRepository labelRepository;
-//
+
     @Autowired
     private ObjectMapper om;
 

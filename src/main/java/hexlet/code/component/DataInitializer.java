@@ -1,7 +1,5 @@
 package hexlet.code.component;
 
-//import java.util.stream.IntStream;
-
 import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.taskStatus.TaskStatusCreateDTO;
 //import hexlet.code.app.model.TaskStatus;
@@ -25,14 +23,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//import net.datafaker.Faker;
 
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
-//    @Autowired
-//    private final UserRepository userRepository;
     @Autowired
     private final LabelRepository labelRepository;
 
@@ -95,39 +90,5 @@ public class DataInitializer implements ApplicationRunner {
                 statusService.create(statusData);
             }
         }
-//        var nameStatus = "Draft";
-//        var nameSlug = "draft";
-//        var taskStatus = new TaskStatus();
-//        taskStatus.setName(nameStatus);
-//        taskStatus.setSlug(nameSlug);
-//        taskStatusRepository.save(taskStatus);
-//
-//        nameStatus = "ToReview";
-//        nameSlug = "to_review";
-//        taskStatus = new TaskStatus();
-//        taskStatus.setName(nameStatus);
-//        taskStatus.setSlug(nameSlug);
-//        taskStatusRepository.save(taskStatus);
-//
-//        nameStatus = "ToBeFixed";
-//        nameSlug = "to_be_fixed";
-//        taskStatus = new TaskStatus();
-//        taskStatus.setName(nameStatus);
-//        taskStatus.setSlug(nameSlug);
-//        taskStatusRepository.save(taskStatus);
-//
-//        nameStatus = "ToPublish";
-//        nameSlug = "to_publish";
-//        taskStatus = new TaskStatus();
-//        taskStatus.setName(nameStatus);
-//        taskStatus.setSlug(nameSlug);
-//        taskStatusRepository.save(taskStatus);
-//
-//        nameStatus = "Published";
-//        nameSlug = "published";
-//        taskStatus = new TaskStatus();
-//        taskStatus.setName(nameStatus);
-//        taskStatus.setSlug(nameSlug);
-//        taskStatusRepository.save(taskStatus);
     }
 }
