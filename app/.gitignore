@@ -35,3 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+
+**/logs/
+
+.settings
+bin
+.project*
+.classpath
+.idea/
+.factorypath
+*.cast
+*.Identifier
