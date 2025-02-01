@@ -1,12 +1,12 @@
 .DEFAULT_GOAL := build
 build:
-	./gradlew clean build
+	app/gradlew clean build
 run-dist:
-	./build/install/app/bin/app
+	app/build/install/app/bin/app
 report:
-	./gradlew jacocoTestReport
+	app/gradlew jacocoTestReport
 test:
-	./gradlew test
+	app/gradlew test
 lint:
-	./gradlew checkstyleMain checkstyleTest
+	app/gradlew checkstyleMain checkstyleTest
 .PHONY: build
