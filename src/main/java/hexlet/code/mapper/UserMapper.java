@@ -44,6 +44,5 @@ public abstract class UserMapper {
     public void encryptPassword(UserCreateDTO data) {
         var password = data.getPassword();
         data.setPassword(encoder.encode(password));
-//        data.setPassword(password);
     }
 }
