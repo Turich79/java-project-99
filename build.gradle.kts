@@ -91,7 +91,7 @@ tasks.test {
 sentry {
     includeSourceContext = true
 
-    org = "obyrif"
+    org = "turich79"
     projectName = "java-spring"
     authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
