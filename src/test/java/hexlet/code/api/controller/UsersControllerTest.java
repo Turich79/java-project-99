@@ -18,11 +18,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.instancio.Instancio;
@@ -96,8 +99,8 @@ class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        var request = MockMvcRequestBuilders.post("/api/users").with(jwt())
-            .contentType(MediaType.APPLICATION_JSON)
+        var request = post("/api/users").with(jwt())
+            .contentType(APPLICATION_JSON)
             .content(om.writeValueAsString(testUser));
 
         mockMvc.perform(request)
@@ -111,6 +114,32 @@ class UsersControllerTest {
         assertEquals(user.getEmail(), testUser.getEmail());
         assertNotEquals(user.getPasswordDigest(), testUser.getPasswordDigest());
     }
+
+    @Test
+    void testCreate2() throws Exception {
+        var data = Instancio.of(modelGenerator.getUserModel())
+            .create();
+
+        var request = post("/api/users")
+            .with(token)
+            .contentType(APPLICATION_JSON)
+            .content(om.writeValueAsString(data));
+        var result = mockMvc
+            .perform(request)
+            .andExpect(status().isCreated())
+            .andReturn();
+        var body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+            v -> v.node("password").isAbsent(),
+            v -> v.node("id").isPresent(),
+            v -> v.node("firstName").isEqualTo(data.getFirstName()),
+            v -> v.node("lastName").isEqualTo(data.getLastName()),
+            v -> v.node("email").isEqualTo(data.getEmail()),
+            v -> v.node("createdAt").isPresent()
+        );
+    }
+
 
     @Test
     public void testShowWithoutAuth() throws Exception {
