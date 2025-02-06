@@ -5,10 +5,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-//import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.OneToMany;
@@ -18,14 +17,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-//import com.fasterxml.jackson.annotation.JsonIgnore;
-
-//import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-//import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.EqualsAndHashCode;
@@ -47,21 +42,16 @@ public class User implements UserDetails, BaseEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Task> tasks = new ArrayList<>();
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.MERGE)
+    private Set<Task> tasks = new HashSet<>();
 
-    // EMAIL
     @Column(unique = true)
     @Email
     @ToString.Include
     private String email;
 
-    // @NotBlank
-    @ToString.Include
     private String firstName;
 
-    // @NotBlank
     @ToString.Include
     private String lastName;
 

@@ -1,23 +1,34 @@
 package hexlet.code.service;
 
-import hexlet.code.dto.user.UserCreateDTO;
-import hexlet.code.dto.user.UserDTO;
-import hexlet.code.dto.user.UserUpdateDTO;
-import hexlet.code.exception.ResourceNotFoundException;
+import hexlet.code.dto.UserDTO;
 import hexlet.code.mapper.UserMapper;
+import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.util.UserUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public final class UserService implements UserDetailsManager {
+
+    @Autowired
+    private UserMapper userMapper;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserUtils userUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UserDTO> getAll() {
         var users = userRepository.findAll();
@@ -27,25 +38,67 @@ public class UserService {
     }
 
     public UserDTO findById(Long id) {
-        var user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+        var user = userRepository.findById(id).orElseThrow();
         return userMapper.map(user);
     }
 
-    public UserDTO create(UserCreateDTO userCreateDTO) {
-        var user = userMapper.map(userCreateDTO);
+    public UserDTO create(UserDTO data) {
+        var user = userMapper.map(data);
+        var passwordDigest = passwordEncoder.encode(data.getPassword());
+        user.setPasswordDigest(passwordDigest);
         userRepository.save(user);
         return userMapper.map(user);
     }
 
-    public UserDTO update(UserUpdateDTO userUpdateDTO, Long id) {
-        var user = userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
-        userMapper.update(userUpdateDTO, user);
+    public UserDTO update(UserDTO data, Long id) {
+        var user = userRepository.findById(id).orElseThrow();
+        userMapper.update(data, user);
+
+        if (data.getPassword() != null) {
+            var passwordDigest = passwordEncoder.encode(data.getPassword());
+            user.setPasswordDigest(passwordDigest);
+        }
+
         userRepository.save(user);
         return userMapper.map(user);
     }
+
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    public void createUser(UserDetails userData) {
+        var user = new User();
+        user.setEmail(userData.getUsername());
+        var hashedPassword = passwordEncoder.encode(userData.getPassword());
+        user.setPasswordDigest(hashedPassword);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateUser(UserDetails user) {
+        throw new NotImplementedException("Unimplemented method 'updateUser'");
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        throw new NotImplementedException("Unimplemented method 'deleteUser'");
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword) {
+        throw new NotImplementedException("Unimplemented method 'changePassword'");
+    }
+
+    @Override
+    public boolean userExists(String username) {
+        throw new NotImplementedException("Unimplemented method 'userExists'");
     }
 }

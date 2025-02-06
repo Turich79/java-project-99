@@ -1,8 +1,7 @@
 package hexlet.code.component;
 
-import hexlet.code.dto.label.LabelCreateDTO;
-import hexlet.code.dto.taskStatus.TaskStatusCreateDTO;
-//import hexlet.code.app.model.TaskStatus;
+import hexlet.code.model.Label;
+import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.service.LabelService;
@@ -12,15 +11,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-//import hexlet.code.app.model.Post;
 import hexlet.code.model.User;
-//import hexlet.code.app.repository.PostRepository;
-//import hexlet.code.app.repository.UserRepository;
 import hexlet.code.service.CustomUserDetailsService;
 import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,13 +50,11 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void addLabels() {
-        List<String> labels = new ArrayList<>(List.of("bug", "feature"));
-        LabelCreateDTO labelData = new LabelCreateDTO();
-        for (String label : labels) {
-            if (labelRepository.findByName(label).isEmpty()) {
-                labelData.setName(label);
-                labelService.create(labelData);
-            }
+        List<String> labels = List.of("feature", "bug");
+        for (String labelName : labels) {
+            var label = new Label();
+            label.setName(labelName);
+            labelRepository.save(label);
         }
     }
 
@@ -76,19 +68,20 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void addStatuses() {
-        Map<String, String> statuses = new HashMap<>(
-            Map.of("draft", "Draft", "to_review", "To review",
-                "to_be_fixed", "Must be fixed",
-                "to_publish", "Ready to publish", "published", "Published")
-        );
+        Map<String, String> taskStatuses = Map.of(
+            "Draft", "draft",
+            "ToReview", "to_review",
+            "ToBeFixed", "to_be_fixed",
+            "ToPublish", "to_publish",
+            "Published", "published");
 
-        TaskStatusCreateDTO statusData = new TaskStatusCreateDTO();
-        for (Map.Entry<String, String> status : statuses.entrySet()) {
-            if (statusRepository.findBySlug(status.getKey()).isEmpty()) {
-                statusData.setSlug(status.getKey());
-                statusData.setName(status.getValue());
-                statusService.create(statusData);
-            }
+        var taskStatusNames = taskStatuses.keySet();
+        for (String name : taskStatusNames) {
+            var slug = taskStatuses.get(name);
+            var data = new TaskStatus();
+            data.setName(name);
+            data.setSlug(slug);
+            taskStatusRepository.save(data);
         }
     }
 }

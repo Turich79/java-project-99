@@ -1,13 +1,10 @@
 package hexlet.code.controller.api;
 
-import hexlet.code.dto.user.UserCreateDTO;
-import hexlet.code.dto.user.UserDTO;
-import hexlet.code.dto.user.UserUpdateDTO;
-import hexlet.code.exception.ResourceNotFoundException;
-import hexlet.code.mapper.UserMapper;
+import hexlet.code.dto.UserDTO;
+import hexlet.code.service.UserService;
+import hexlet.code.util.UserUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import hexlet.code.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,59 +18,65 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/users")
-public class UsersController {
+public final class UsersController {
 
     @Autowired
-    private UserRepository repository;
+    private UserService userService;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserUtils userUtils;
 
-    @GetMapping("")
-    ResponseEntity<List<UserDTO>> index() {
-        var users = repository.findAll();
-        var result = users.stream()
-                .map(userMapper::map)
-                .toList();
-        return ResponseEntity.ok()
-                .header("X-Total-Count", String.valueOf(users.size()))
-                .body(result);
+    @GetMapping(path = "")
+    public ResponseEntity<List<UserDTO>> getAll() {
+        var users = userService.getAll();
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .header("X-Total-Count", String.valueOf(users.size()))
+            .body(users);
     }
 
-    @PostMapping("")
+    @GetMapping(path = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO getById(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    UserDTO create(@Valid @RequestBody UserCreateDTO userData) {
-        var user = userMapper.map(userData);
-        repository.save(user);
-        return userMapper.map(user);
+    public UserDTO create(@Valid @RequestBody UserDTO data) {
+        return userService.create(data);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    UserDTO update(@RequestBody UserUpdateDTO userData, @PathVariable Long id) {
-        var user = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        userMapper.update(userData, user);
-        repository.save(user);
-        var userDTO = userMapper.map(user);
-        return userDTO;
+    public UserDTO update(@Valid @RequestBody UserDTO data, @PathVariable Long id) {
+        var currentUser = userUtils.getCurrentUser();
+        var user = new UserDTO();
+
+        if (Objects.equals(currentUser.getId(), id)) {
+            user = userService.update(data, id);
+        }
+
+        return user;
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    UserDTO show(@PathVariable Long id) {
-        var user = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        return userMapper.map(user);
-    }
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<UserDTO> delete(@PathVariable Long id) {
+        var currentUser = userUtils.getCurrentUser();
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void destroy(@PathVariable Long id) {
-        repository.deleteById(id);
+        if (Objects.equals(currentUser.getId(), id)) {
+            userService.delete(id);
+            return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .build();
+        }
     }
-
 }
