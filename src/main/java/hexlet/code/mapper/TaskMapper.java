@@ -83,4 +83,9 @@ public abstract class TaskMapper {
             .map(labelId -> labelRepository.findById(labelId).get())
             .collect(Collectors.toSet());
     }
+//public Set<Long> toLabelIdList(Set<Label> labels) {
+//    return labels.stream()
+//        .map(l -> l.getId())
+//        .toList();
+//}
 }

@@ -11,6 +11,7 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
+
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -31,6 +33,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+////для теста от Хекслета, временно закомментил
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//import org.instancio.Select;
+//import java.util.Set;
+//import hexlet.code.util.TestUtils;
+//import java.util.HashMap;
+//import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+//import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -178,6 +189,38 @@ public final class TaskControllerTest {
         var task = taskRepository.getReferenceById(taskId);
         assertThat(task.getDescription()).isEqualTo("Go shopping");
     }
+
+    ////тест от Хекслета, временно закомментил
+//    @Test
+//    public void testUpdate2() throws Exception {
+//        var updTask = testTask;//TestUtils.getTaskByName(mockMvc, testTask.getName());
+//        var data = new HashMap<String, String>();
+//        var name = "New Task Name";
+//        data.put("title", name);
+//
+//        var request = put("/api/tasks/{id}", updTask.getId()).with(jwt())
+//            .contentType(MediaType.APPLICATION_JSON)
+//            .content(om.writeValueAsString(data));
+//        var result = mockMvc.perform(request)
+//            .andExpect(status().isOk())
+//            .andReturn();
+//        var body = result.getResponse().getContentAsString();
+//        System.out.println(body);
+//
+//        assertThatJson(body).and(
+//            v -> v.node("content").isEqualTo(testTask.getDescription()),
+//            v -> v.node("title").isEqualTo(data.get("title")),
+//            v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
+//            v -> v.node("taskLabelIds").isEqualTo(testTask.getLabels())
+//        );
+//
+//        var actualTask = TestUtils.getTaskByName(mockMvc, name);
+//
+//        assertEquals(name, actualTask.getName());
+//        assertEquals(testTask.getDescription(), actualTask.getDescription());
+//        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
+//        assertEquals(testTask.getLabels(), actualTask.getLabels());
+//    }
 
     @Test
     public void testDelete() throws Exception {
