@@ -34,15 +34,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-////для теста от Хекслета, временно закомментил
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import org.instancio.Select;
-//import java.util.Set;
-//import hexlet.code.util.TestUtils;
-//import java.util.HashMap;
-//import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-//import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public final class TaskControllerTest {
@@ -189,45 +180,6 @@ public final class TaskControllerTest {
         var task = taskRepository.getReferenceById(taskId);
         assertThat(task.getDescription()).isEqualTo("surprize!");
     }
-
-    ////тест от Хекслета, временно закомментил
-//    @Test
-//    public void testUpdate2() throws Exception {
-////        var updTask = testTask;//TestUtils.getTaskByName(mockMvc, testTask.getName());
-//        var data = new HashMap<String, String>();
-//        var name = "New Task Name";
-//        data.put("title", name);
-//        System.out.println("StatusBefore==" + testTask.getTaskStatus() + ",ID==" +
-//          testTask.getTaskStatus().getId());
-//        var request = put("/api/tasks/{id}", testTask.getId()).with(jwt())
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .content(om.writeValueAsString(data));
-//        var result = mockMvc.perform(request)
-//            .andExpect(status().isOk())
-//            .andReturn();
-//        var body = result.getResponse().getContentAsString();
-////        System.out.println("Body==" + body);
-//        System.out.println("StatusAfter==" + testTask.getTaskStatus()+ ",statusID==" +
-//          testTask.getTaskStatus().getId());
-////        System.out.println("Labels==" + testTask.getLabels().size());
-//
-////        assertThatJson(body).and(
-////            v -> v.node("content").isEqualTo(testTask.getDescription()),
-////            v -> v.node("title").isEqualTo(data.get("title")),
-////            v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
-////            v -> v.node("taskLabelIds").isEqualTo(testTask.getLabels())
-////        );
-//
-////        var actualTask = TestUtils.getTaskByName(mockMvc, name);
-//        var actualTask = taskRepository.findByName(name).get();
-//        System.out.println("actualtaskStatus==" + actualTask.getTaskStatus() + ",ID==" +
-//          actualTask.getTaskStatus().getId());
-//
-//        assertEquals(name, actualTask.getName());
-//        assertEquals(testTask.getDescription(), actualTask.getDescription());
-////        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
-//        assertEquals(testTask.getLabels(), actualTask.getLabels());
-//    }
 
     @Test
     public void testDelete() throws Exception {
