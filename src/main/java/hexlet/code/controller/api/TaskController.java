@@ -2,6 +2,7 @@ package hexlet.code.controller.api;
 
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.dto.TaskParamsDTO;
+import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.service.TaskService;
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public final class TaskController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TaskDTO update(@Valid @RequestBody TaskDTO data, @PathVariable Long id) {
+    public TaskDTO update(@Valid @RequestBody TaskUpdateDTO data, @PathVariable Long id) {
         return taskService.update(data, id);
     }
 

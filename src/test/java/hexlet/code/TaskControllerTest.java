@@ -177,7 +177,7 @@ public final class TaskControllerTest {
         var taskId = testTask.getId();
 
         var data = new TaskDTO();
-        data.setContent("Go shopping");
+        data.setContent("surprize!");
 
         var request = put("/api/tasks/" + taskId).with(token)
             .contentType(MediaType.APPLICATION_JSON)
@@ -187,38 +187,45 @@ public final class TaskControllerTest {
             .andExpect(status().isOk());
 
         var task = taskRepository.getReferenceById(taskId);
-        assertThat(task.getDescription()).isEqualTo("Go shopping");
+        assertThat(task.getDescription()).isEqualTo("surprize!");
     }
 
     ////тест от Хекслета, временно закомментил
 //    @Test
 //    public void testUpdate2() throws Exception {
-//        var updTask = testTask;//TestUtils.getTaskByName(mockMvc, testTask.getName());
+////        var updTask = testTask;//TestUtils.getTaskByName(mockMvc, testTask.getName());
 //        var data = new HashMap<String, String>();
 //        var name = "New Task Name";
 //        data.put("title", name);
-//
-//        var request = put("/api/tasks/{id}", updTask.getId()).with(jwt())
+//        System.out.println("StatusBefore==" + testTask.getTaskStatus() + ",ID==" +
+//          testTask.getTaskStatus().getId());
+//        var request = put("/api/tasks/{id}", testTask.getId()).with(jwt())
 //            .contentType(MediaType.APPLICATION_JSON)
 //            .content(om.writeValueAsString(data));
 //        var result = mockMvc.perform(request)
 //            .andExpect(status().isOk())
 //            .andReturn();
 //        var body = result.getResponse().getContentAsString();
-//        System.out.println(body);
+////        System.out.println("Body==" + body);
+//        System.out.println("StatusAfter==" + testTask.getTaskStatus()+ ",statusID==" +
+//          testTask.getTaskStatus().getId());
+////        System.out.println("Labels==" + testTask.getLabels().size());
 //
-//        assertThatJson(body).and(
-//            v -> v.node("content").isEqualTo(testTask.getDescription()),
-//            v -> v.node("title").isEqualTo(data.get("title")),
-//            v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
-//            v -> v.node("taskLabelIds").isEqualTo(testTask.getLabels())
-//        );
+////        assertThatJson(body).and(
+////            v -> v.node("content").isEqualTo(testTask.getDescription()),
+////            v -> v.node("title").isEqualTo(data.get("title")),
+////            v -> v.node("status").isEqualTo(testTask.getTaskStatus()),
+////            v -> v.node("taskLabelIds").isEqualTo(testTask.getLabels())
+////        );
 //
-//        var actualTask = TestUtils.getTaskByName(mockMvc, name);
+////        var actualTask = TestUtils.getTaskByName(mockMvc, name);
+//        var actualTask = taskRepository.findByName(name).get();
+//        System.out.println("actualtaskStatus==" + actualTask.getTaskStatus() + ",ID==" +
+//          actualTask.getTaskStatus().getId());
 //
 //        assertEquals(name, actualTask.getName());
 //        assertEquals(testTask.getDescription(), actualTask.getDescription());
-//        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
+////        assertEquals(testTask.getTaskStatus(), actualTask.getTaskStatus());
 //        assertEquals(testTask.getLabels(), actualTask.getLabels());
 //    }
 

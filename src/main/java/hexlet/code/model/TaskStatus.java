@@ -12,7 +12,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,28 +24,22 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 public final class TaskStatus implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ToString.Include
     private Long id;
 
     @NotBlank
-    @ToString.Include
     private String name;
 
     @NotBlank
     @Column(unique = true)
-    @ToString.Include
     private String slug;
 
     @CreatedDate
-    @ToString.Include
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE)
-    @ToString.Include
     private Set<Task> tasks = new HashSet<>();
 }

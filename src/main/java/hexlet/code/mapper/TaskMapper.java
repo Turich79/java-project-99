@@ -1,18 +1,17 @@
 package hexlet.code.mapper;
 
 import hexlet.code.dto.TaskDTO;
+import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
-import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
@@ -23,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(
-    uses = { JsonNullableMapper.class, ReferenceMapper.class },
+    uses = {JsonNullableMapper.class, ReferenceMapper.class},
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
     componentModel = MappingConstants.ComponentModel.SPRING,
     unmappedTargetPolicy = ReportingPolicy.IGNORE
@@ -43,31 +42,25 @@ public abstract class TaskMapper {
     @Mapping(target = "taskLabelIds", source = "labels", qualifiedByName = "labelsToIds")
     public abstract TaskDTO mapToDto(Task model);
 
-    @Named("labelsToIds")
-    public final Set<Long> toDTO(Set<Label> labels) {
-        return labels.isEmpty() ? new HashSet<>() : labels.stream()
-            .map(Label::getId)
-            .collect(Collectors.toSet());
-    }
-
-    @Mappings({
-        @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus"),
-        @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "idToUser"),
-        @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "idsToLabels"),
-        @Mapping(target = "name", source = "title"),
-        @Mapping(target = "description", source = "content"),
-        @Mapping(target = "createdAt", ignore = true),
-        @Mapping(target = "id", ignore = true)
-    })
+    @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus")
+    @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "idToUser")
+    @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "idsToLabels")
+    @Mapping(target = "name", source = "title")
+    @Mapping(target = "description", source = "content")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "id", ignore = true)
     public abstract Task mapToEntity(TaskDTO data);
 
-    @InheritConfiguration(name = "mapToEntity")
-    public abstract Task update(TaskDTO model, @MappingTarget Task data);
+    @Mapping(source = "title", target = "name")
+    @Mapping(source = "content", target = "description")
+    @Mapping(target = "taskStatus", source = "status", qualifiedByName = "slugToTaskStatus")
+    @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "idToUser")
+    @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "idsToLabels")
+    public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
     @Named("slugToTaskStatus")
     public final TaskStatus toEntity(String status) {
-        return taskStatusRepository.findBySlug(status)
-            .orElseThrow();
+        return taskStatusRepository.findBySlug(status).orElseThrow();
     }
 
     @Named("idToUser")
@@ -77,15 +70,17 @@ public abstract class TaskMapper {
         return assigneeId == null ? null : user;
     }
 
+    @Named("labelsToIds")
+    public final Set<Long> toDTO(Set<Label> labels) {
+        return labels.isEmpty() ? new HashSet<>() : labels.stream()
+            .map(Label::getId)
+            .collect(Collectors.toSet());
+    }
+
     @Named("idsToLabels")
     public final Set<Label> toEntity(Set<Long> labelIds) {
         return labelIds.isEmpty() ? new HashSet<>() : labelIds.stream()
             .map(labelId -> labelRepository.findById(labelId).get())
             .collect(Collectors.toSet());
     }
-//public Set<Long> toLabelIdList(Set<Label> labels) {
-//    return labels.stream()
-//        .map(l -> l.getId())
-//        .toList();
-//}
 }

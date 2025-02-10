@@ -2,6 +2,7 @@ package hexlet.code.service;
 
 import hexlet.code.dto.TaskDTO;
 import hexlet.code.dto.TaskParamsDTO;
+import hexlet.code.dto.TaskUpdateDTO;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
@@ -54,7 +55,7 @@ public final class TaskService {
         return taskMapper.mapToDto(task);
     }
 
-    public TaskDTO update(TaskDTO data, Long id) {
+    public TaskDTO update(TaskUpdateDTO data, Long id) {
         var task = taskRepository.findById(id).orElseThrow();
         taskMapper.update(data, task);
         taskRepository.save(task);
